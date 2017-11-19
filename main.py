@@ -1,88 +1,14 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, escape
 import html
+import os
+import jinja2
 
+template_dir = os.path.join(os.path.dirname(__file__),'templates')
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
 
 app = Flask(__name__)
 app.config['DEBUG'] = True      # displays runtime errors in the browser, too
 
-page_header = """
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>User Signup</title>
-    </head>
-    <body>
-        <h1>Signup</h1>
-"""
-# add signup form
-form = """
-<!DOCTYPE html>
-
-<html>
-    <head>
-        <style>
-            form {{
-                background-color: #eee;
-                padding: 20px;
-                margin: 0 auto;
-                width: 540px;
-                font: 16px sans-serif;
-                border-radius: 10px;
-            }}
-        </style>
-    </head>
-    <body>
-      <form method="post">
-       <table>
-        <tbody>
-        <tr>
-            <td>
-                <label for="username">Username</label>
-            </td>
-            <td>
-                <input name="username" value="" type="text">
-                <span class="error"> That's not a valid username</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="password">Password</label>
-            </td>
-            <td>
-                <input name="password" type="password">
-                <span class="error">That's not a valid password</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="verify">Verify Password</label>
-            </td>
-            <td>
-                <input name="verify" type="password">
-                <span class="error"> Passwords don't match</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="email">Email (optional)</label>
-            </td>
-            <td>
-                <input name="email" value="">
-                <span class="error"></span>
-            </td>
-        </tr>
-       </tbody>
-       </table>
-        <input type="submit" value="Sign in">
-      </form>
-    </body>
-</html
-"""
-
-page_footer = """
-    </body>
-</html>
-"""
 def is_empty(text):
     if not len(text) > 0:
         return True
@@ -102,13 +28,16 @@ def validate():
     verify_error = ''
     email_error = ''
 
-@app.route("/")
+@app.route('/')
 def index():
-    return form
+    template = jinja_env.get_template('index.html')
+    return template.render()
 
-@app.route('/hello', methods=['POST'])
-def hello():
-    username =  request.form['username']
-    return '<h1>Hello, ' + html.escape(username) + '!' + '</h1>'
+@app.route('/', methods=['POST'])
+def welcome():
+    username = request.form['username']
+    template = jinja_env.get_template('welcome.html')
+    return template.render(username=username)
+
 
 app.run()
