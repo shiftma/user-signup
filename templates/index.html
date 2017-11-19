@@ -18,6 +18,16 @@
                 font: 16px sans-serif;
                 border-radius: 10px;
             }
+            .error {
+                color: red;
+                padding-left: 10px;
+            }
+            #submit{
+                margin-top: 10px;
+                background-color: rgb(110, 233, 110);
+                height: 30px;
+                width: 80px;
+            }
         </style>
      <title>User Signup</title>
     </head>
@@ -32,7 +42,7 @@
             </td>
             <td>
                 <input name="username" value="" type="text">
-                <span class="error"> That's not a valid username</span>
+                <span class="error">{{user_error}}</span>
             </td>
         </tr>
         <tr>
@@ -41,7 +51,7 @@
             </td>
             <td>
                 <input name="password" type="password">
-                <span class="error">That's not a valid password</span>
+                <span class="error">{{password_error}}</span>
             </td>
         </tr>
         <tr>
@@ -50,7 +60,7 @@
             </td>
             <td>
                 <input name="verify" type="password">
-                <span class="error"> Passwords don't match</span>
+                <span class="error">{{verify_error}}</span>
             </td>
         </tr>
         <tr>
@@ -64,7 +74,7 @@
         </tr>
        </tbody>
        </table>
-        <input type="submit" value="Sign in">
+        <input type="submit" value="Sign in" id = "submit">
       </form>
     </body>
 </html
